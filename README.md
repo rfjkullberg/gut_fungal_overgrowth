@@ -287,6 +287,37 @@ ggplot(deseq, aes(x=reorder(Family,log2FoldChange), y=log2FoldChange, fill=group
 rm(highlow, ps.highlow, deseq, dsq, geoMeans, res, ps.deseq)
 ```
 
+## Step 6 - Parasitome and bacteriome
 
+```
+alpha <- estimate_richness(ps) 
+alpha$sample <- row.names(alpha)
+alpha$sample <- gsub("X","",as.character(alpha$sample))
+alpha <- alpha %>%
+  left_join(s)
+alpha <- alpha %>%
+  arrange(match)
+```
+```
+comparisons <- list(c("pos", "neg"))
+ggplot(alpha, aes(x = blasto, y = Shannon, fill = blasto))+
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, show.legend = FALSE) +
+  geom_point(color = "black", pch = 21, alpha =.75, size = 2, show.legend = FALSE)+
+  stat_compare_means(method = "wilcox.test", size=4, comparison = comparisons, label = "p.format") +
+  scale_color_manual(values=c('#9f514d', "#49a258")) +
+  scale_fill_manual(values=c('#9f514d', "#49a258")) +
+  theme_bw(base_size=14) +
+  ylab("Shannon Bacterial Diversity")+
+  theme(legend.position = "none")
+ggplot(alpha, aes(x = dienta, y = Shannon, fill = dienta))+
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, show.legend = FALSE) +
+  geom_point(color = "black", pch = 21, alpha =.75, size = 2, show.legend = FALSE)+
+  stat_compare_means(method = "wilcox.test", size=4, comparison = comparisons, label = "p.format") +
+  scale_color_manual(values=c('#9f514d', "#49a258")) +
+  scale_fill_manual(values=c('#9f514d', "#49a258")) +
+  theme_bw(base_size=14) +
+  ylab("Shannon Bacterial Diversity")+
+  theme(legend.position = "none")
+```
 
   
