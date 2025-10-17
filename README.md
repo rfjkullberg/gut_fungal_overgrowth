@@ -73,7 +73,7 @@ df <- df %>%
 ```
 
 ## Step 3 - Fungal growth
-Gut fungal growth ranges from 0 to 191318760 CFUs per gram stool. We divided our cohort into three groups: no fungal growth (n=987), low-to-normal fungal growth (n=1745) and fungal overgrowth (n=115). 
+Gut fungal growth ranges from 0 to 191318760 CFUs per gram stool. We divided our cohort into four groups: no fungal growth, normal fungal growth, elevated fungal growth and fungal overgrowth. 
 ```
 summary(df$yeast_cfu)
 table(df$group) 
@@ -92,7 +92,7 @@ ggplot(df, aes(x=reorder(sample_id,yeast_cfu), y=yeast_cfu, color = group)) +
 ```
 
 ## Step 4 - Fungal growth and parasitome
-Colonization with the anaerobic gut parasites Blastocystis species, Dientamoeba fragilis, and Giardia lamblia 
+Colonization with the anaerobic gut parasites Blastocystis species and Dientamoeba fragilis
 ```
 ggplot(df, aes(x=group, fill = blasto)) +
   geom_bar(position = "fill")+
@@ -116,56 +116,29 @@ ggplot(df, aes(x=group, fill = dienta)) +
   theme(plot.title = element_text(size=14, face="plain"), 
         legend.position = "none") +
   coord_flip()
-ggplot(df, aes(x=group, fill = giardia)) +
-  geom_bar(position = "fill")+
-  ylab("% of participants")+   
-  xlab("")+ 
-  ggtitle("Giardia lamblia") +
-  theme_cowplot(18)+
-  scale_y_continuous(expand =c(0,0))+
-  scale_fill_manual(values=c('#9f514d', "#49a258")) +
-  theme(plot.title = element_text(size=14, face="plain"), 
-        legend.position = "none") +
-  coord_flip()
 ```
 
-Colonization with Blastocystis spp was less frequent in participants with fungal overgrowth compared to those with no or low-to-normal fungal growth. 
+Colonization with Blastocystis spp was less frequent in participants with fungal overgrowth compared to those with no or normal fungal growth. 
 ```
-highabsent <- df %>%
-  filter(group != "low") 
-chisq.test(highabsent$group, highabsent$blasto, correct = T)
-#chisq.test(highabsent$group, highabsent$dienta, correct = T) 
-#chisq.test(highabsent$group, highabsent$giardia, correct = T) 
-
-highlow <- df %>%
-  filter(group != "absent") 
-chisq.test(highlow$group, highlow$blasto, correct = T) 
-#chisq.test(highlow$group, highlow$dienta, correct = T) 
-#chisq.test(highlow$group, highlow$giardia, correct = T) 
-
-#lowabsent <- df %>%
-  #filter(group != "high") 
-#chisq.test(lowabsent$group, lowabsent$blasto, correct = T)
-#chisq.test(lowabsent$group, lowabsent$dienta, correct = T)
-#chisq.test(lowabsent$group, lowabsent$giardia, correct = T)
-
-rm(highabsent, highlow)
+df_fisher <- df %>%
+  filter(group != "elevated") %>%
+  filter(group != "low")
+fisher.test(df_fisher$group, df_fisher$blasto)
+df_fisher <- df %>%
+  filter(group != "elevated") %>%
+  filter(group != "absent")
+fisher.test(df_fisher$group, df_fisher$blasto)
+df_fisher <- df %>%
+  filter(group != "low") %>%
+  filter(group != "high")
+fisher.test(df_fisher$group, df_fisher$blasto)
+df_fisher <- df %>%
+  filter(group != "absent") %>%
+  filter(group != "high")
+fisher.test(df_fisher$group, df_fisher$blasto)
+rm(df_fisher)
 ```
 
-Participants colonized by Blastocystis spp. had a higher faecal fungal burden compared to non-colonized participants. 
-```
-comparisons <- list(c("pos", "neg"))
-ggplot(df, aes(x = blasto, y = yeast_cfu, fill = blasto))+
-  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
-  geom_jitter(color = "black", pch = 21, alpha =.75, size = 2, width=0.15) +
-  scale_y_continuous(trans=log_epsilon_trans(epsilon=100),expand = expansion(mult = c(0, .05)))+
-  stat_compare_means(method = "wilcox.test", comparisons = comparisons, size=6, label = "p.value") +
-  scale_color_manual(values=c('#9f514d', "#49a258")) +
-  scale_fill_manual(values=c('#9f514d', "#49a258")) +
-  theme_bw(base_size=14) +
-  ylab("Fungal CFUs per gram stool") +
-  theme(legend.position = "none")
-```
 
 ## Step 5 - Fungal growth and bacteriome
 Faecal fungal growth was inversely correlated with gut bacterial diversity
