@@ -1,6 +1,6 @@
 # Gut fungal overgrowth, anaerobic bacteria and parasitome
 
-This is the code used for the main analyses in "Gut fungal overgrowth is associated with reduced prevalence of Blastocystis species in a large human cohort" (submitted). For questions: Jason Biemond at j.j.biemond@amsterdamumc.nl or Bob Kullberg at r.f.j.kullberg@amsterdamumc.nl
+This is the code used for the main analyses in "Gastrointestinal Overgrowth of Candida albicans and Candida glabrata is Associated with Reduced Obligate Anaerobes and Anaerobic Parasites Blastocystis spp. and Dientamoeba fragilis: Findings from a Large Observational Cohort Study" (submitted). For questions: Jason Biemond at j.j.biemond@amsterdamumc.nl or Bob Kullberg at r.f.j.kullberg@amsterdamumc.nl
 
 
 ## Step 1 - Load libraries
